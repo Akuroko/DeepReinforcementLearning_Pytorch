@@ -1,0 +1,26 @@
+Module used and role
+  numpy
+  matplotlib.pyplot：绘制分数曲线
+  gym：建立环境
+  torch：存取模型
+  torch.nn：建立神经网络
+  torch.nn.functional：leaky_relu激活函数
+  torch.optim：优化器
+  collections.deque：创建双向队列
+  collections.namedturple：创建有名元组
+  copy：浅拷贝 （解释：https://blog.csdn.net/yyhhlancelot/article/details/81462736）
+FILE flow：
+  DDPG_main.py
+    DDPG_agent.py
+      DDPG_model.py
+CODE FLOW:
+  main.py:
+  1 建立环境，设置随机数
+  2 建立智能体：状态空间，动作空间，指定随机数
+    DDPG_agent.py
+    1 设置超参数： 记忆重放缓冲区大小，抽样大小，折现因子，软更新参数学习率，actor学习率，critic学习率，权重衰减，agent更新频率，每次学习抽样次数；设置设备
+    2 DDPGAgent对象：
+        1 self：状态空间，动作空间，指定随机数，
+        2 定义actor策略网络：actor估计网络，actor目标网络，优化器（估计网络的参数）
+        3 定义critic值网络：critic估计网络，critic目标网络，优化器（估计网络的参数）
+        4 Noise process —— Ornstein-Uhlenbeck process解释：（）
