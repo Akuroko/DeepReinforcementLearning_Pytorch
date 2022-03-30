@@ -15,12 +15,36 @@ FILE flow：
       DDPG_model.py
 CODE FLOW:
   main.py:
-  1 建立环境，设置随机数
-  2 建立智能体：状态空间，动作空间，指定随机数
+  1 建立环境env，设置随机数
+  2 建立智能体agent：状态空间，动作空间，指定随机数
     DDPG_agent.py
-    1 设置超参数： 记忆重放缓冲区大小，抽样大小，折现因子，软更新参数学习率，actor学习率，critic学习率，权重衰减，agent更新频率，每次学习抽样次数；设置设备
-    2 DDPGAgent对象：
-        1 self：状态空间，动作空间，指定随机数，
-        2 定义actor策略网络：actor估计网络，actor目标网络，优化器（估计网络的参数）
-        3 定义critic值网络：critic估计网络，critic目标网络，优化器（估计网络的参数）
-        4 Noise process —— Ornstein-Uhlenbeck process解释：（）
+    3 设置超参数： 记忆重放缓冲区大小，抽样大小，折现因子，软更新参数学习率，actor学习率，critic学习率，权重衰减，agent更新频率，每次学习抽样次数；设置设备
+    4 定义DDPGAgent对象：
+          self：状态空间，动作空间，指定随机数，
+                5 定义actor策略网络：actor估计网络，actor目标网络，优化器（估计网络的参数）  DDPG_model.py
+                6 定义critic值网络：critic估计网络，critic目标网络，优化器（估计网络的参数） DDPG_model.py
+                7 定义Noise process —— Ornstein-Uhlenbeck process（解释：https://zhuanlan.zhihu.com/p/54670989） 适用于惯性系统的探索策略
+                8 定义重放记忆区：动作空间、缓冲空间、抽样数量
+  9 DDPG训练：输入env、agent、episodes数
+    10 建立分数序列
+    11 每一个episode：
+        12 重置env、agent：
+          DDPG_agent.py: agent.reset()
+        13 生成当前状态动作：
+          DDPG_agent.py: agent.act(state)
+            14 进入评估模式
+            15 从估计策略网络中生成状态对应action
+            16 添加noise后返回动作
+        17 与环境交互得到s,a,r,s' 
+        18 传递sars'元组给agent：
+          DDPG_agent.py: agent.step(……)
+            19 经验传入memory
+            20 调用learn学习actor和critic的参数 
+              self.learn
+                21 TD方法更新local网络
+                22 soft_update更新target网络
+        23 累积即时收益 判断episode是否结束
+        24 保存一次网络参数（每100个episode）
+               
+            
+                   
